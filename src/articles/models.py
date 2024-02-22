@@ -21,13 +21,13 @@ class Article(models.Model):
         verbose_name='Текст',
     )
     category = models.ForeignKey(
-        'Group',
-        on_delete=models.SET_NULL,
+        'Category',
+        on_delete=models.CASCADE,
         related_name='articles',
     )
     tags = models.ManyToManyField(
         'Tag',
-        through='GenreArticle',
+        through='TagArticle',
     )
     image = models.ImageField(
         upload_to='articles/',
@@ -63,6 +63,14 @@ class Category(models.Model):
         verbose_name='Slug'
     )
 
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Категория',
+        verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return self.name
+
 class Tag(models.Model):
     """Модель тега."""
     name = models.CharField(
@@ -74,6 +82,14 @@ class Tag(models.Model):
         max_length=50,
         verbose_name='Slug'
     )
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+
+    def __str__(self):
+        return self.name
 
 
 class TagArticle(models.Model):
