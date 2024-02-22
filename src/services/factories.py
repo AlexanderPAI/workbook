@@ -76,7 +76,12 @@ class ArticleFactory(DjangoModelFactory):
 
 
 class ArticleWithTags(ArticleFactory):
-    tags = factory.RelatedFactory(
+    tags1 = factory.RelatedFactory(
+        TagArticleFactory,
+        factory_related_name='article',
+        tag__name=factory.Iterator(Tag.objects.all())
+    )
+    tags2 = factory.RelatedFactory(
         TagArticleFactory,
         factory_related_name='article',
         tag__name=factory.Iterator(Tag.objects.all())
