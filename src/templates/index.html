@@ -3,40 +3,41 @@
 {% block title %}Последние статьи{% endblock %}
 
 {% block content %}
-        <div class="row">
-        <div class="col-sm-3">
-            <div class="card p-2">
-                Ссылка 1
-                Ссылка 2
+<div class="row">
+    <div class="col-sm-3">
+        <div class="card p-2">
+            Ссылка 1
+            Ссылка 2
             </div>
         </div>
-        <div class="col-sm-9">
-        {% for article in page_obj %}
-            <div class="card bg-secondary mb-3">
-                <div class="card-header">
-                    {% for tag in article.tags.all %}
-                        <span class="badge" style="background-color: red; color:blue">{{ tag }}</span>
-                    {% endfor %}
-                    {% for tag in article.tags.all %}
-                        <span class="badge rounded-pill bg-primary">{{ tag }}</span>
-                    {% endfor %}
-                    {% for tag in article.tags.all %}
-                        <span class="badge bg-primary">{{ tag }}</span>
-                    {% endfor %}
-                    <p><small>{{ article.created }}, последнее обновление {{ article.updated }}</small></p>
-                </div>
-                    <div class="card-body">
-                        <h4 class="card-title">{{ article.title }}</h4>
-                        <p class="card-text">{{ article.text|truncatechars:500|safe }}</p>
-                        <p>{{ article.text|truncatechars:500|safe }}</p>
-                        <p>Автор: {{ article.author.get_full_name }}</p>
-                        <p>Дата публикации: {{ article.created|date:"d E Y" }}</p>
-                        <p>Последнее изменение: {{ article.updated|date:"d E Y" }}</p>
-                        <p>Категория: {{ article.category }}</p>
-                    </div>
+    <div class="col-sm-9">
+    {% for article in page_obj %}
+        <div class="card mb-3">
+            <h3 class="card-header">{{ article.title }}</h3>
+            <div class="card-body">
+                <h6><a href="#" class="card-link">Раздел: {{ article.category }}</a></h6>
+                {% for tag in article.tags.all %}
+                    <span class="badge rounded-pill" style="background-color:{{ tag.background_color }}; color:{{ tag.text_color }}">{{ tag }}</span>
+                {% endfor %}
             </div>
-        {% if not forloop.last %}<br>{% endif %}
-        {% endfor %}
-        {% include 'includes/paginator.html' %}
+            <svg xmlns="http://www.w3.org/2000/svg" class="d-block user-select-none" width="100%" height="300" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle">
+                <rect width="100%" height="100%" fill="#868e96"></rect>
+                <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
+            </svg>
+            <div class="card-body">
+                <p class="card-text">{{ article.text|truncatechars:1000|safe }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href="#" class="card-link">Читать</a></li>
+            </ul>
+            <div class="card-footer text-muted">
+                <small>Публикация: {{ article.created }}</small>,
+                <small>последнее обновление: {{ article.updated }}</small>
+            </div>
         </div>
+    {% if not forloop.last %}<br>{% endif %}
+    {% endfor %}
+{% include 'includes/paginator.html' %}
+    </div>
+</div>
 {% endblock %}

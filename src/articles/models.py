@@ -5,6 +5,12 @@ from django.db import models
 User = get_user_model()
 
 
+COLORS = {
+    'white': '#FFFFFF',
+    'black': '#000000',
+}
+
+
 class Article(models.Model):
     """Модель статьи."""
     author = models.ForeignKey(
@@ -81,6 +87,20 @@ class Tag(models.Model):
         unique=True,
         max_length=50,
         verbose_name='Slug'
+    )
+    text_color = models.CharField(
+        max_length=200,
+        verbose_name='Цвет текста',
+        choices=COLORS,
+        default='white',
+        blank=True,
+        null=True,
+    )
+    background_color = models.CharField(
+        max_length=200,
+        verbose_name='Цвет фона',
+        blank=True,
+        null=True,
     )
 
     class Meta:
