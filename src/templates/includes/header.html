@@ -1,9 +1,9 @@
-<nav class="navbar navbar-light" style="background-color: #0085A1">
+<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
     <div class="container">
         <a class="navbar-brand" href="{% url 'articles:index' %}">
             {% load static %}
             <img src="{% static 'img/logo.gif' %}" width="100" height="100" class="d-inline-block align-center" alt="">
-            <span style="color:white">BACKENDPages</span>
+            <span style="color:white">BackendPages</span>
         </a>
         {% with request.resolver_match.view_name as view_name %}
         <ul class="nav nav-pills">

@@ -4,42 +4,39 @@
 
 {% block content %}
         <div class="row">
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <div class="card p-2">
                 Ссылка 1
                 Ссылка 2
             </div>
         </div>
-        <div class="col-sm-10">
+        <div class="col-sm-9">
         {% for article in page_obj %}
-            <div class="card p-2">
-            <article>
-                <p><h2>{{ article.title }}</h2></p>
-                <p>
-                    Теги:
+            <div class="card bg-secondary mb-3">
+                <div class="card-header">
                     {% for tag in article.tags.all %}
-                        {{ tag }},
+                        <span class="badge" style="background-color: red; color:blue">{{ tag }}</span>
                     {% endfor %}
-                </p>
-                <p>{{ article.text }}</p>
-                <ul>
-                    <li>
-                        Автор: {{ article.author.get_full_name }}
-                    </li>
-                    <li>
-                        Дата публикации: {{ article.created|date:"d E Y" }}
-                    </li>
-                    <li>
-                        Последнее изменение: {{ article.updated|date:"d E Y" }}
-                    </li>
-                    <li>
-                        Категория: {{ article.category }}
-                    </li>
-                </ul>
-            </article>
+                    {% for tag in article.tags.all %}
+                        <span class="badge rounded-pill bg-primary">{{ tag }}</span>
+                    {% endfor %}
+                    {% for tag in article.tags.all %}
+                        <span class="badge bg-primary">{{ tag }}</span>
+                    {% endfor %}
+                    <p><small>{{ article.created }}, последнее обновление {{ article.updated }}</small></p>
+                </div>
+                    <div class="card-body">
+                        <h4 class="card-title">{{ article.title }}</h4>
+                        <p class="card-text">{{ article.text|truncatechars:500|safe }}</p>
+                        <p>{{ article.text|truncatechars:500|safe }}</p>
+                        <p>Автор: {{ article.author.get_full_name }}</p>
+                        <p>Дата публикации: {{ article.created|date:"d E Y" }}</p>
+                        <p>Последнее изменение: {{ article.updated|date:"d E Y" }}</p>
+                        <p>Категория: {{ article.category }}</p>
+                    </div>
             </div>
         {% if not forloop.last %}<br>{% endif %}
         {% endfor %}
-        </div>
         {% include 'includes/paginator.html' %}
+        </div>
 {% endblock %}
