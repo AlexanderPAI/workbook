@@ -34,3 +34,14 @@ def article(request, article_id):
         'article': article
     }
     return render(request, 'articles/article.html', context)
+
+
+def articles_by_tag(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+    articles = tag.articles.all()
+    page_obj = paginator(request, articles)
+    context = {
+        'tag': tag,
+        'page_obj': page_obj,
+    }
+    return render(request, 'articles/articles_by_tag.html', context)

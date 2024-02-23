@@ -34,6 +34,7 @@ class Article(models.Model):
     tags = models.ManyToManyField(
         'Tag',
         through='TagArticle',
+        related_name='articles'
     )
     image = models.ImageField(
         upload_to='articles/',
