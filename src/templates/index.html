@@ -4,12 +4,6 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-sm-3">
-        <div class="card p-2">
-            Ссылка 1
-            Ссылка 2
-            </div>
-        </div>
     <div class="col-sm-9">
     {% for article in page_obj %}
         <div class="card mb-3">
@@ -38,6 +32,18 @@
     {% if not forloop.last %}<br>{% endif %}
     {% endfor %}
 {% include 'includes/paginator.html' %}
+    </div>
+    <div class="col-sm-3">
+        <div class="card p-2">
+            <button type="button" class="btn btn-secondary">Ссылка1</button>
+            <button type="button" class="btn btn-secondary">Ссылка2</button>
+            <button type="button" class="btn btn-secondary">Ссылка3</button>
+            <button type="button" class="btn btn-secondary">Ссылка4</button>
+            <button type="button" class="btn btn-secondary">Ссылка5</button>
+            <button type="button" class="btn btn-secondary">Ссылка6</button>
+            <button type="button" class="btn btn-secondary">Ссылка7</button>
+            <button type="button" class="btn btn-secondary">Ссылка8</button>
+        </div>
     </div>
 </div>
 {% endblock %}
