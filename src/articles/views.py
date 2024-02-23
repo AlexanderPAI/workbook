@@ -14,6 +14,7 @@ def paginator(request, articles):
 
 
 def index(request):
+    """Представление главной страницы."""
     articles = Article.objects.all()
     page_obj = paginator(request, articles)
     context = {
@@ -24,3 +25,12 @@ def index(request):
         'index.html',
         context,
     )
+
+
+def article(request, article_id):
+    """Представление статьи."""
+    article = get_object_or_404(Article, pk=article_id)
+    context = {
+        'article': article
+    }
+    return render(request, 'articles/article.html', context)
