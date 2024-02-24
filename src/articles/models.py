@@ -28,13 +28,17 @@ class Article(models.Model):
     text = HTMLField()
     category = models.ForeignKey(
         'Category',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='articles',
+        blank=True,
+        null=True,
     )
     tags = models.ManyToManyField(
         'Tag',
         through='TagArticle',
-        related_name='articles'
+        related_name='articles',
+        blank=True,
+        null=True,
     )
     image = models.ImageField(
         upload_to='articles/',

@@ -3,8 +3,8 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 
 from articles.decorators import superuser_only
-from articles.forms import ArticleForm, TagForm
-from articles.models import Article, Category, Tag, User
+from articles.forms import ArticleForm, CategoryForm, TagForm
+from articles.models import Article, Category, Tag
 
 
 PAGE_SIZE = 10
@@ -140,7 +140,6 @@ def article_edit(request, article_id):
     return redirect('articles/article_create.html', article_id)
 
 
-@superuser_only
 def tags(request):
     """Представление для создания тега."""
     tags = Tag.objects.all()
@@ -171,7 +170,6 @@ def tags(request):
     )
 
 
-@superuser_only
 def tag_edit(request, slug):
     """Представление для редактирования тега."""
     tag = get_object_or_404(Tag, slug=slug)
@@ -203,4 +201,68 @@ def tag_edit(request, slug):
                 'tags': tags,
             }
         )
-    return redirect('articles/tags.html')
+    return redirect('articles/tags.html', slug)
+
+
+def category_create(request):
+    """Представление для создания раздела."""
+    categories = Category.objects.all()
+    if request.method == 'POST' or None:
+        form = CategoryForm(request.POST or None)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.save()
+            return redirect('articles:articles_by_category', slug=category.slug)
+        return render(
+            request,
+            'articles/category_create.html',
+            {
+                'form': form,
+                'is_edit': False,
+                'categories': categories,
+            }
+        )
+    form = CategoryForm()
+    return render(
+        request,
+        'articles/category_create.html',
+        {
+            'form': form,
+            'is_edit': False,
+            'categories': categories,
+        }
+    )
+
+
+def category_edit(request, slug):
+    """Представление для редактирования тега."""
+    category = get_object_or_404(Category, slug=slug)
+    categories = Category.objects.all()
+    form = CategoryForm(
+        request.POST or None,
+        instance=category,
+    )
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                return redirect('articles:articles_by_category')
+            return render(
+                request,
+                'articles/category_create.html',
+                {
+                    'form': form,
+                    'is_edit': True,
+                    'categories': categories,
+                }
+            )
+        return render(
+            request,
+            'articles/category_create.html',
+            {
+                'form': form,
+                'is_edit': True,
+                'categories': categories,
+            }
+        )
+    return redirect('articles/category_create.html', slug)

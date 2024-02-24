@@ -2,7 +2,7 @@ from django import forms
 
 from tinymce.widgets import TinyMCE
 
-from articles.models import Article, Tag
+from articles.models import Article, Category, Tag
 
 
 class ArticleForm(forms.ModelForm):
@@ -42,4 +42,18 @@ class TagForm(forms.ModelForm):
             'slug': 'Slug (латиницей)',
             'text_color': 'Укажите HEX',
             'background_color': 'Укажите HEX',
+        }
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ('name', 'slug')
+        labels = {
+            'name': 'Название',
+            'slug': 'Slug',
+        }
+        help_texts = {
+            'name': 'Введите название',
+            'slug': 'Slug (латиницей)',
         }
