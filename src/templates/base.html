@@ -9,6 +9,7 @@
         <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/fav/favicon.png' %}">
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/fav/favicon.png' %}">
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/prism.css' %}">
     </head>
     <title>
         {% block title %}
@@ -20,16 +21,17 @@
             {% include 'includes/header.html' %}
         </header>
         <div class='container-md py-5'>
-        <main>
-            {% block content %}
-                Содержание страницы
-            {% endblock %}
-        </main>
-        <br>
-        <footer class="border-top text-center py-3">
-            {% include 'includes/footer.html' %}
-        </footer>
+            <main>
+                {% block content %}
+                    Содержание страницы
+                {% endblock %}
+            </main>
+            <br>
         </div>
-    <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+        <footer class="border-top text-center py-3">
+          {% include 'includes/footer.html' %}
+        </footer>
+        <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+        <script src="{% static 'js/prism.js' %}"></script>
     </body>
 </html>

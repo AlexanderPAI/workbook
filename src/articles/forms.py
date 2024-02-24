@@ -1,5 +1,7 @@
 from django import forms
 
+from tinymce.widgets import TinyMCE
+
 from articles.models import Article
 
 
@@ -7,6 +9,7 @@ class ArticleForm(forms.ModelForm):
     """Форма создания/редактирования поста."""
     class Meta:
         model = Article
+        widgets = {'text': TinyMCE(attrs={'cols': 80, 'rows': 30})}
         fields = ('title', 'text', 'category', 'tags', 'image')
         labels = {
             'title': 'Заголовок',

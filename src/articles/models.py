@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from tinymce.models import HTMLField
+
 
 User = get_user_model()
 
@@ -23,9 +25,7 @@ class Article(models.Model):
         max_length=200,
         verbose_name='Заголовок',
     )
-    text = models.TextField(
-        verbose_name='Текст',
-    )
+    text = HTMLField()
     category = models.ForeignKey(
         'Category',
         on_delete=models.CASCADE,

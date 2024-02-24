@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sorl.thumbnail',
+    'tinymce',
     'articles',
     'core',
     'services',
@@ -133,3 +134,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'articles:index'
+
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': 'codesample',
+    'toolbar': 'codesample',
+}
