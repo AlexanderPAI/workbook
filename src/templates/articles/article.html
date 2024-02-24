@@ -3,6 +3,7 @@
 {% block title %}{{ article.title }}{% endblock %}
 
 {% block content %}
+{% load thumbnail %}
 <div class="row">
     <div class="col-sm-9">
         <div class="card mb-3">
@@ -13,15 +14,20 @@
                     <a href="{% url 'articles:articles_by_tag' tag.slug %}"><span class="badge rounded-pill" style="background-color:{{ tag.background_color }}; color:{{ tag.text_color }}">{{ tag }}</span></a>
                 {% endfor %}
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" class="d-block user-select-none" width="100%" height="300" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle">
-                <rect width="100%" height="100%" fill="#868e96"></rect>
-                <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
-            </svg>
+            {% thumbnail article.image "900x300" crop="center" upscale=True as im %}
+                <img class="card-img" src="{{ im.url }}">
+            {% endthumbnail %}
             <div class="card-body">
                 <p class="card-text">{{ article.text|safe }}</p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item"><a href="{% url 'articles:index' %}" class="card-link">На главную</a></li>
+                <li class="list-group-item"><a href="{% url 'articles:index' %}" class="card-link">На главную</a>
+                {% if user.is_superuser %}
+                    <a href="{% url 'articles:article_edit' article.id %}">
+                        Редактировать
+                    </a>
+                {% endif %}
+                </li>
             </ul>
             <div class="card-footer text-muted">
                 <small>Публикация: {{ article.created }}</small>,
