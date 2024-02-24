@@ -1,8 +1,11 @@
 from django.core.paginator import Paginator
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 
+from articles.decorators import superuser_only
+from articles.forms import ArticleForm
 from articles.models import Article, Category, Tag, User
+
 
 PAGE_SIZE = 10
 
@@ -66,3 +69,35 @@ def articles_by_category(request, slug):
         'tags': tags,
     }
     return render(request, 'articles/articles_by_category.html', context)
+
+
+@superuser_only
+def article_create(request):
+    tags = Tag.objects.all()
+    if request.method == 'POST' or None:
+        form = ArticleForm(request.POST, files=request.FILES or None)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            form.save_m2m()
+            return redirect('articles:index')
+        return render(
+            request,
+            'articles/article_create.html',
+            {
+                'form': form,
+                'is_edit': False,
+                'tags': tags,
+            }
+        )
+    form = ArticleForm()
+    return render(
+        request,
+        'articles/article_create.html',
+        {
+            'form': form,
+            'is_edit': False,
+            'tags': tags
+        }
+    )
