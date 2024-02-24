@@ -28,7 +28,7 @@ def index(request):
 
 
 def article(request, article_id):
-    """Представление статьи."""
+    """Представление одной статьи."""
     article = get_object_or_404(Article, pk=article_id)
     context = {
         'article': article
@@ -37,6 +37,7 @@ def article(request, article_id):
 
 
 def articles_by_tag(request, slug):
+    """Представление фильтра по тегу."""
     tag = get_object_or_404(Tag, slug=slug)
     articles = tag.articles.all()
     page_obj = paginator(request, articles)
@@ -45,3 +46,15 @@ def articles_by_tag(request, slug):
         'page_obj': page_obj,
     }
     return render(request, 'articles/articles_by_tag.html', context)
+
+
+def articles_by_category(request, slug):
+    """Представление фильтра по разделу."""
+    category = get_object_or_404(Category, slug=slug)
+    articles = category.articles.all()
+    page_obj = paginator(request, articles)
+    context = {
+        'category': category,
+        'page_obj': page_obj
+    }
+    return render(request, 'articles/articles_by_category.html', context)

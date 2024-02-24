@@ -9,7 +9,7 @@
         <div class="card mb-3">
             <h3 class="card-header">{{ article.title }}</h3>
             <div class="card-body">
-                <h6><a href="#" class="card-link">Раздел: {{ article.category }}</a></h6>
+                <h6><a href="{% url 'articles:articles_by_category' article.category.slug %}" class="card-link">Раздел: {{ article.category }}</a></h6>
                 {% for tag in article.tags.all %}
                     <span class="badge rounded-pill" style="background-color:{{ tag.background_color }}; color:{{ tag.text_color }}"><a href="{% url 'articles:articles_by_tag' tag.slug %}">{{ tag }}</a></span>
                 {% endfor %}
