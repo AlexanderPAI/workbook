@@ -73,6 +73,7 @@ def articles_by_category(request, slug):
 
 @superuser_only
 def article_create(request):
+    """Представление для создания статьи."""
     tags = Tag.objects.all()
     if request.method == 'POST' or None:
         form = ArticleForm(request.POST, files=request.FILES or None)
@@ -101,3 +102,39 @@ def article_create(request):
             'tags': tags
         }
     )
+
+
+@superuser_only
+def article_edit(request, article_id):
+    """Представление для редактирования статьи."""
+    article = get_object_or_404(Article, pk=article_id)
+    tags = Tag.objects.all()
+    form = ArticleForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=article
+    )
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                return redirect('articles:article', article_id)
+            return render(
+                request,
+                'articles/article_create.html',
+                {
+                    'form': form,
+                    'is_edit': True,
+                    'tags': tags,
+                }
+            )
+        return render(
+            request,
+            'articles/article_create.html',
+            {
+                'form': form,
+                'is_edit': True,
+                'tags': tags,
+            }
+        )
+    return redirect('articles/article_create.html', article_id)
