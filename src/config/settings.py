@@ -136,6 +136,12 @@ LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'articles:index'
 
 TINYMCE_DEFAULT_CONFIG = {
-    'plugins': 'codesample',
-    'toolbar': 'codesample',
+    'plugins': 'codesample, advlist,autolink,lists,link,image,charmap,print,preview,anchor,'
+               'searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,'
+               'code,help,wordcount',
+    "toolbar": "undo redo | formatselect | "
+    "bold italic | alignleft aligncenter "
+    "alignright alignjustify | bullist numlist outdent indent | "
+    "removeformat | help"
+    "codesample",
 }

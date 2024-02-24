@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 
 from articles.decorators import superuser_only
-from articles.forms import ArticleForm
+from articles.forms import ArticleForm, TagForm
 from articles.models import Article, Category, Tag, User
 
 
@@ -138,3 +138,69 @@ def article_edit(request, article_id):
             }
         )
     return redirect('articles/article_create.html', article_id)
+
+
+@superuser_only
+def tags(request):
+    """Представление для создания тега."""
+    tags = Tag.objects.all()
+    if request.method == 'POST' or None:
+        form = TagForm(request.POST or None)
+        if form.is_valid():
+            tag = form.save(commit=False)
+            tag.save()
+            return redirect('articles:tags')
+        return render(
+            request,
+            'articles/tags.html',
+            {
+                'form': form,
+                'is_edit': False,
+                'tags': tags,
+            }
+        )
+    form = TagForm()
+    return render(
+        request,
+        'articles/tags.html',
+        {
+            'form': form,
+            'is_edit': False,
+            'tags': tags
+        }
+    )
+
+
+@superuser_only
+def tag_edit(request, slug):
+    """Представление для редактирования тега."""
+    tag = get_object_or_404(Tag, slug=slug)
+    tags = Tag.objects.all()
+    form = TagForm(
+        request.POST or None,
+        instance=tag,
+    )
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                return redirect('articles:tags')
+            return render(
+                request,
+                'articles/tags.html',
+                {
+                    'form': form,
+                    'is_edit': True,
+                    'tags': tags,
+                }
+            )
+        return render(
+            request,
+            'articles/tags.html',
+            {
+                'form': form,
+                'is_edit': True,
+                'tags': tags,
+            }
+        )
+    return redirect('articles/tags.html')
