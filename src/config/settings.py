@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'articles',
     'core',
     'services',
-    'staticpages',
+    'info',
     'users',
 ]
 
