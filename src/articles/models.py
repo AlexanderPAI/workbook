@@ -38,7 +38,6 @@ class Article(models.Model):
         through='TagArticle',
         related_name='articles',
         blank=True,
-        null=True,
     )
     image = models.ImageField(
         upload_to='articles/',
