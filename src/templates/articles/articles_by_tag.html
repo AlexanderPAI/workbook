@@ -8,7 +8,7 @@
     <div class="col-sm-9">
     <div class="card">
         <div class="card-body">
-            Фильтр по тегу: <span class="badge rounded-pill" style="background-color:{{ tag.background_color }}; color:{{ tag.text_color }}"><a href="{% url 'articles:articles_by_tag' tag.slug %}">{{ tag }}</a></span>
+            Фильтр по тегу: <a href="{% url 'articles:articles_by_tag' tag.slug %}"><span class="badge rounded-pill" style="background-color:{{ tag.background_color }}; color:{{ tag.text_color }}">{{ tag }}</span></a>
         </div>
     </div>
     <br>

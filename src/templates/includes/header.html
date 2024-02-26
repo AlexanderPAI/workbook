@@ -1,20 +1,33 @@
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-    <div class="container">
-        <a class="navbar-brand" href="{% url 'articles:index' %}">
-            {% load static %}
-            <img src="{% static 'img/logo.gif' %}" width="50" height="50" class="d-inline-block align-center" alt="">
-            <span style="color:white">BackendPages</span>
-        </a>
-        {% with request.resolver_match.view_name as view_name %}
-        <ul class="nav nav-pills">
-            <li class="nav-item">
-                <a class="nav-link {% if view_name == 'about:author' %}active{% endif %}"
-                href="#"
-                >
-                    О проекте
-                </a>
-            </li>
-        </ul>
-        {% endwith %}
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'articles:index' %}">
+      {% load static %}
+      <img src="{% static 'img/logo.gif' %}" width="50" height="50" class="d-inline-block align-center" alt="">
+        <span style="color:white">BackendPages</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    {% with request.resolver_match.view_name as view_name %}
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      {% if user.is_superuser %}
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link {% if view_name == 'articles:article_create'%}active{% endif %}" href="{% url 'articles:article_create' %}">Новая статья</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Режим админа</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item {% if view_name == 'articles:tags'%}active{% endif %}" href="{% url 'articles:tags' %}">Теги</a>
+            <a class="dropdown-item {% if view_name == 'articles:category_create'%}active{% endif %}" href="{% url 'articles:category_create' %}">Разделы</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'users:logout' %}">Выйти</a>
+          </div>
+        </li>
+      </ul>
+      {% else %}
+      {% endif %}
     </div>
+    {% endwith %}
+  </div>
 </nav>

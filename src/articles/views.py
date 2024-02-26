@@ -9,7 +9,9 @@ from articles.models import Article, Category, Tag
 
 PAGE_SIZE = 10
 
+
 def paginator(request, articles):
+    """Пагинатор."""
     paginator = Paginator(articles, PAGE_SIZE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -18,7 +20,7 @@ def paginator(request, articles):
 
 def index(request):
     """Представление главной страницы."""
-    tags = Tag.objects.all()
+    tags = Tag.objects.all().order_by('name')
     articles = Article.objects.all()
     page_obj = paginator(request, articles)
     context = {
@@ -34,7 +36,7 @@ def index(request):
 
 def article(request, article_id):
     """Представление одной статьи."""
-    tags = Tag.objects.all()
+    tags = Tag.objects.all().order_by('name')
     article = get_object_or_404(Article, pk=article_id)
     context = {
         'article': article,
@@ -45,7 +47,7 @@ def article(request, article_id):
 
 def articles_by_tag(request, slug):
     """Представление фильтра по тегу."""
-    tags = Tag.objects.all()
+    tags = Tag.objects.all().order_by('name')
     tag = get_object_or_404(Tag, slug=slug)
     articles = tag.articles.all()
     page_obj = paginator(request, articles)
@@ -59,7 +61,7 @@ def articles_by_tag(request, slug):
 
 def articles_by_category(request, slug):
     """Представление фильтра по разделу."""
-    tags = Tag.objects.all()
+    tags = Tag.objects.all().order_by('name')
     category = get_object_or_404(Category, slug=slug)
     articles = category.articles.all()
     page_obj = paginator(request, articles)
@@ -74,7 +76,7 @@ def articles_by_category(request, slug):
 @superuser_only
 def article_create(request):
     """Представление для создания статьи."""
-    tags = Tag.objects.all()
+    tags = Tag.objects.all().order_by('name')
     if request.method == 'POST' or None:
         form = ArticleForm(request.POST, files=request.FILES or None)
         if form.is_valid():
@@ -108,7 +110,7 @@ def article_create(request):
 def article_edit(request, article_id):
     """Представление для редактирования статьи."""
     article = get_object_or_404(Article, pk=article_id)
-    tags = Tag.objects.all()
+    tags = Tag.objects.all().order_by('name')
     form = ArticleForm(
         request.POST or None,
         files=request.FILES or None,
@@ -142,7 +144,7 @@ def article_edit(request, article_id):
 
 def tags(request):
     """Представление для создания тега."""
-    tags = Tag.objects.all()
+    tags = Tag.objects.all().order_by('name')
     if request.method == 'POST' or None:
         form = TagForm(request.POST or None)
         if form.is_valid():
@@ -173,7 +175,7 @@ def tags(request):
 def tag_edit(request, slug):
     """Представление для редактирования тега."""
     tag = get_object_or_404(Tag, slug=slug)
-    tags = Tag.objects.all()
+    tags = Tag.objects.all().order_by('name')
     form = TagForm(
         request.POST or None,
         instance=tag,
@@ -206,7 +208,7 @@ def tag_edit(request, slug):
 
 def category_create(request):
     """Представление для создания раздела."""
-    categories = Category.objects.all()
+    categories = Category.objects.all().order_by('name')
     if request.method == 'POST' or None:
         form = CategoryForm(request.POST or None)
         if form.is_valid():
@@ -237,7 +239,7 @@ def category_create(request):
 def category_edit(request, slug):
     """Представление для редактирования тега."""
     category = get_object_or_404(Category, slug=slug)
-    categories = Category.objects.all()
+    categories = Category.objects.all().order_by('name')
     form = CategoryForm(
         request.POST or None,
         instance=category,
