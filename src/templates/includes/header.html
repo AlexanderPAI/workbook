@@ -10,8 +10,8 @@
     </button>
     {% with request.resolver_match.view_name as view_name %}
     <div class="collapse navbar-collapse" id="navbarColor01">
-      {% if user.is_superuser %}
       <ul class="navbar-nav me-auto">
+        {% if user.is_superuser %}
         <li class="nav-item">
           <a class="nav-link {% if view_name == 'articles:article_create'%}active{% endif %}" href="{% url 'articles:article_create' %}">Новая статья</a>
         </li>
@@ -24,9 +24,14 @@
             <a class="dropdown-item" href="{% url 'users:logout' %}">Выйти</a>
           </div>
         </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link {% if view_name == 'info:about'%}active{% endif %}" href="{% url 'info:about' %}">О проекте</a>
+        </li>
       </ul>
-      {% else %}
-      {% endif %}
+
+
+
     </div>
     {% endwith %}
   </div>
