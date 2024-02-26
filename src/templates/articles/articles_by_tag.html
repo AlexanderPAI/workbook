@@ -4,69 +4,42 @@
 
 {% block content %}
 {% load thumbnail %}
-<div class="row">
-    <div class="col-sm-9">
-    <div class="card">
-        <div class="card-body">
-            Фильтр по тегу: <a href="{% url 'articles:articles_by_tag' tag.slug %}"><span class="badge rounded-pill" style="background-color:{{ tag.background_color }}; color:{{ tag.text_color }}">{{ tag }}</span></a>
-        </div>
-    </div>
-    <br>
-    {% for article in page_obj %}
-        <div class="card mb-3">
-            <h3 class="card-header">{{ article.title }}</h3>
-            <div class="card-body">
-                <h6><a href="{% url 'articles:articles_by_category' article.category.slug %}" class="card-link">Раздел: {{ article.category }}</a></h6>
-                {% for tag in article.tags.all %}
-                    <a href="{% url 'articles:articles_by_tag' tag.slug %}"><span class="badge rounded-pill" style="background-color:{{ tag.background_color }}; color:{{ tag.text_color }}">{{ tag }}</span></a>
-                {% endfor %}
-            </div>
-            {% thumbnail article.image "900x300" crop="center" upscale=True as im %}
-                <img class="card-img" src="{{ im.url }}">
-            {% endthumbnail %}
-            <div class="card-body">
-                <p class="card-text">{{ article.text|truncatechars:500|safe }}</p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><a href="{% url 'articles:article' article.id %}" class="card-link">Читать</a>
-                {% if user.is_superuser %}
-                    <a href="{% url 'articles:article_edit' article.id %}">
-                        Редактировать
-                    </a>
-                {% endif %}
-                </li>
-            </ul>
-            <div class="card-footer text-muted">
-                <small>Публикация: {{ article.created }}</small>,
-                <small>последнее обновление: {{ article.updated }}</small>
-            </div>
-        </div>
-    {% if not forloop.last %}<br>{% endif %}
-    {% endfor %}
-    {% include 'includes/paginator.html' %}
-    </div>
-    <div class="col-sm-3">
-        <div class="card bg-secondary mb-3">
-            <div class="card-header text-center">Все теги</div>
-                <div class="card-body">
-                    {% for tag in tags %}
-                        <a href="{% url 'articles:articles_by_tag' tag.slug %}"><span class="badge rounded-pill" style="background-color:{{ tag.background_color }}; color:{{ tag.text_color }}">{{ tag }}</span></a>
-                    {% endfor %}
-                </div>
-        </div>
-        <div class="card bg-secondary mb-3">
-            <div class="card-header text-center">Полезные ссылки</div>
-                <div class="card">
-                    <button type="button" class="btn btn-secondary">Ссылка1</button>
-                    <button type="button" class="btn btn-secondary">Ссылка2</button>
-                    <button type="button" class="btn btn-secondary">Ссылка3</button>
-                    <button type="button" class="btn btn-secondary">Ссылка4</button>
-                    <button type="button" class="btn btn-secondary">Ссылка5</button>
-                    <button type="button" class="btn btn-secondary">Ссылка6</button>
-                    <button type="button" class="btn btn-secondary">Ссылка7</button>
-                    <button type="button" class="btn btn-secondary">Ссылка8</button>
-                </div>
-        </div>
-    </div>
+<div class="card">
+  <div class="card-body">
+    Фильтр по тегу: <a href="{% url 'articles:articles_by_tag' tag.slug %}"><span class="badge rounded-pill" style="background-color:{{ tag.background_color }}; color:{{ tag.text_color }}">{{ tag }}</span></a>
+  </div>
 </div>
+<br>
+{% for article in page_obj %}
+<div class="card mb-3">
+  <h3 class="card-header">{{ article.title }}</h3>
+  <div class="card-body">
+    <h6><a href="{% url 'articles:articles_by_category' article.category.slug %}" class="card-link">Раздел: {{ article.category }}</a></h6>
+    {% for tag in article.tags.all %}
+      <a href="{% url 'articles:articles_by_tag' tag.slug %}"><span class="badge rounded-pill" style="background-color:{{ tag.background_color }}; color:{{ tag.text_color }}">{{ tag }}</span></a>
+    {% endfor %}
+  </div>
+  {% thumbnail article.image "900x300" crop="center" upscale=True as im %}
+    <img class="card-img" src="{{ im.url }}">
+  {% endthumbnail %}
+  <div class="card-body">
+    <p class="card-text">{{ article.text|truncatechars:500|safe }}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><a href="{% url 'articles:article' article.id %}" class="card-link">Читать</a>
+    {% if user.is_superuser %}
+      <a href="{% url 'articles:article_edit' article.id %}">
+        Редактировать
+      </a>
+    {% endif %}
+    </li>
+  </ul>
+  <div class="card-footer text-muted">
+    <small>Публикация: {{ article.created }}</small>,
+    <small>последнее обновление: {{ article.updated }}</small>
+  </div>
+</div>
+{% if not forloop.last %}<br>{% endif %}
+{% endfor %}
+{% include 'includes/paginator.html' %}
 {% endblock %}

@@ -18,6 +18,18 @@ def paginator(request, articles):
     return page_obj
 
 
+def base_page(request):
+    tags = Tag.objects.all().order_by('name')
+    context = {
+        'tags': tags
+    }
+    return render(
+        request,
+        'base.html',
+        context,
+    )
+
+
 def index(request):
     """Представление главной страницы."""
     tags = Tag.objects.all().order_by('name')
@@ -208,6 +220,7 @@ def tag_edit(request, slug):
 
 def category_create(request):
     """Представление для создания раздела."""
+    tags = Tag.objects.all().order_by('name')
     categories = Category.objects.all().order_by('name')
     if request.method == 'POST' or None:
         form = CategoryForm(request.POST or None)
@@ -222,6 +235,7 @@ def category_create(request):
                 'form': form,
                 'is_edit': False,
                 'categories': categories,
+                'tags': tags,
             }
         )
     form = CategoryForm()
@@ -232,12 +246,14 @@ def category_create(request):
             'form': form,
             'is_edit': False,
             'categories': categories,
+            'tags': tags,
         }
     )
 
 
 def category_edit(request, slug):
     """Представление для редактирования тега."""
+    tags = Tag.objects.all().order_by('name')
     category = get_object_or_404(Category, slug=slug)
     categories = Category.objects.all().order_by('name')
     form = CategoryForm(
@@ -256,6 +272,7 @@ def category_edit(request, slug):
                     'form': form,
                     'is_edit': True,
                     'categories': categories,
+                    'tags': tags,
                 }
             )
         return render(
@@ -265,6 +282,7 @@ def category_edit(request, slug):
                 'form': form,
                 'is_edit': True,
                 'categories': categories,
+                'tags': tags,
             }
         )
     return redirect('articles/category_create.html', slug)
