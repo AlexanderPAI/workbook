@@ -1,26 +1,288 @@
 from django.core.paginator import Paginator
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 
-from articles.models import Article, Category, Tag, User
+from articles.decorators import superuser_only
+from articles.forms import ArticleForm, CategoryForm, TagForm
+from articles.models import Article, Category, Tag
+
 
 PAGE_SIZE = 10
 
+
 def paginator(request, articles):
+    """Пагинатор."""
     paginator = Paginator(articles, PAGE_SIZE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return page_obj
 
 
+def base_page(request):
+    tags = Tag.objects.all().order_by('name')
+    context = {
+        'tags': tags
+    }
+    return render(
+        request,
+        'base.html',
+        context,
+    )
+
+
 def index(request):
+    """Представление главной страницы."""
+    tags = Tag.objects.all().order_by('name')
     articles = Article.objects.all()
     page_obj = paginator(request, articles)
     context = {
-        'page_obj': page_obj
+        'page_obj': page_obj,
+        'tags': tags,
     }
     return render(
         request,
         'index.html',
         context,
     )
+
+
+def article(request, article_id):
+    """Представление одной статьи."""
+    tags = Tag.objects.all().order_by('name')
+    article = get_object_or_404(Article, pk=article_id)
+    context = {
+        'article': article,
+        'tags': tags,
+    }
+    return render(request, 'articles/article.html', context)
+
+
+def articles_by_tag(request, slug):
+    """Представление фильтра по тегу."""
+    tags = Tag.objects.all().order_by('name')
+    tag = get_object_or_404(Tag, slug=slug)
+    articles = tag.articles.all()
+    page_obj = paginator(request, articles)
+    context = {
+        'page_obj': page_obj,
+        'tag': tag,
+        'tags': tags,
+    }
+    return render(request, 'articles/articles_by_tag.html', context)
+
+
+def articles_by_category(request, slug):
+    """Представление фильтра по разделу."""
+    tags = Tag.objects.all().order_by('name')
+    category = get_object_or_404(Category, slug=slug)
+    articles = category.articles.all()
+    page_obj = paginator(request, articles)
+    context = {
+        'page_obj': page_obj,
+        'category': category,
+        'tags': tags,
+    }
+    return render(request, 'articles/articles_by_category.html', context)
+
+
+@superuser_only
+def article_create(request):
+    """Представление для создания статьи."""
+    tags = Tag.objects.all().order_by('name')
+    if request.method == 'POST' or None:
+        form = ArticleForm(request.POST, files=request.FILES or None)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            form.save_m2m()
+            return redirect('articles:index')
+        return render(
+            request,
+            'articles/article_create.html',
+            {
+                'form': form,
+                'is_edit': False,
+                'tags': tags,
+            }
+        )
+    form = ArticleForm()
+    return render(
+        request,
+        'articles/article_create.html',
+        {
+            'form': form,
+            'is_edit': False,
+            'tags': tags
+        }
+    )
+
+
+@superuser_only
+def article_edit(request, article_id):
+    """Представление для редактирования статьи."""
+    article = get_object_or_404(Article, pk=article_id)
+    tags = Tag.objects.all().order_by('name')
+    form = ArticleForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=article
+    )
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                return redirect('articles:article', article_id)
+            return render(
+                request,
+                'articles/article_create.html',
+                {
+                    'form': form,
+                    'is_edit': True,
+                    'tags': tags,
+                }
+            )
+        return render(
+            request,
+            'articles/article_create.html',
+            {
+                'form': form,
+                'is_edit': True,
+                'tags': tags,
+            }
+        )
+    return redirect('articles/article_create.html', article_id)
+
+
+def tags(request):
+    """Представление для создания тега."""
+    tags = Tag.objects.all().order_by('name')
+    if request.method == 'POST' or None:
+        form = TagForm(request.POST or None)
+        if form.is_valid():
+            tag = form.save(commit=False)
+            tag.save()
+            return redirect('articles:tags')
+        return render(
+            request,
+            'articles/tags.html',
+            {
+                'form': form,
+                'is_edit': False,
+                'tags': tags,
+            }
+        )
+    form = TagForm()
+    return render(
+        request,
+        'articles/tags.html',
+        {
+            'form': form,
+            'is_edit': False,
+            'tags': tags
+        }
+    )
+
+
+def tag_edit(request, slug):
+    """Представление для редактирования тега."""
+    tag = get_object_or_404(Tag, slug=slug)
+    tags = Tag.objects.all().order_by('name')
+    form = TagForm(
+        request.POST or None,
+        instance=tag,
+    )
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                return redirect('articles:tags')
+            return render(
+                request,
+                'articles/tags.html',
+                {
+                    'form': form,
+                    'is_edit': True,
+                    'tags': tags,
+                }
+            )
+        return render(
+            request,
+            'articles/tags.html',
+            {
+                'form': form,
+                'is_edit': True,
+                'tags': tags,
+            }
+        )
+    return redirect('articles/tags.html', slug)
+
+
+def category_create(request):
+    """Представление для создания раздела."""
+    tags = Tag.objects.all().order_by('name')
+    categories = Category.objects.all().order_by('name')
+    if request.method == 'POST' or None:
+        form = CategoryForm(request.POST or None)
+        if form.is_valid():
+            category = form.save(commit=False)
+            category.save()
+            return redirect('articles:articles_by_category', slug=category.slug)
+        return render(
+            request,
+            'articles/category_create.html',
+            {
+                'form': form,
+                'is_edit': False,
+                'categories': categories,
+                'tags': tags,
+            }
+        )
+    form = CategoryForm()
+    return render(
+        request,
+        'articles/category_create.html',
+        {
+            'form': form,
+            'is_edit': False,
+            'categories': categories,
+            'tags': tags,
+        }
+    )
+
+
+def category_edit(request, slug):
+    """Представление для редактирования тега."""
+    tags = Tag.objects.all().order_by('name')
+    category = get_object_or_404(Category, slug=slug)
+    categories = Category.objects.all().order_by('name')
+    form = CategoryForm(
+        request.POST or None,
+        instance=category,
+    )
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                return redirect('articles:articles_by_category')
+            return render(
+                request,
+                'articles/category_create.html',
+                {
+                    'form': form,
+                    'is_edit': True,
+                    'categories': categories,
+                    'tags': tags,
+                }
+            )
+        return render(
+            request,
+            'articles/category_create.html',
+            {
+                'form': form,
+                'is_edit': True,
+                'categories': categories,
+                'tags': tags,
+            }
+        )
+    return redirect('articles/category_create.html', slug)

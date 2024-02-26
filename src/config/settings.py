@@ -31,8 +31,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sorl.thumbnail',
+    'tinymce',
     'articles',
+    'core',
     'services',
+    'info',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -113,8 +118,31 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+STATICFILES_DIRS = [
+    Path(BASE_DIR, 'static')
+]
+
+MEDIA_URL = 'img/'
+MEDIA_ROOT = Path(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'articles:index'
+
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': 'codesample, advlist,autolink,lists,link,image,charmap,print,preview,anchor,'
+               'searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,'
+               'code,help,wordcount',
+    "toolbar": "undo redo | formatselect | "
+    "bold italic | alignleft aligncenter "
+    "alignright alignjustify | bullist numlist outdent indent | "
+    "removeformat | help"
+    "codesample",
+}

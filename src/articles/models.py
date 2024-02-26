@@ -1,8 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from tinymce.models import HTMLField
+
 
 User = get_user_model()
+
+
+COLORS = {
+    'white': '#FFFFFF',
+    'black': '#000000',
+}
 
 
 class Article(models.Model):
@@ -17,17 +25,20 @@ class Article(models.Model):
         max_length=200,
         verbose_name='Заголовок',
     )
-    text = models.TextField(
-        verbose_name='Текст',
-    )
+    text = HTMLField()
     category = models.ForeignKey(
         'Category',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='articles',
+        blank=True,
+        null=True,
     )
     tags = models.ManyToManyField(
         'Tag',
         through='TagArticle',
+        related_name='articles',
+        blank=True,
+        null=True,
     )
     image = models.ImageField(
         upload_to='articles/',
@@ -81,6 +92,20 @@ class Tag(models.Model):
         unique=True,
         max_length=50,
         verbose_name='Slug'
+    )
+    text_color = models.CharField(
+        max_length=200,
+        verbose_name='Цвет текста',
+        choices=COLORS,
+        default='white',
+        blank=True,
+        null=True,
+    )
+    background_color = models.CharField(
+        max_length=200,
+        verbose_name='Цвет фона',
+        blank=True,
+        null=True,
     )
 
     class Meta:

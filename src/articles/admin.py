@@ -11,6 +11,7 @@ class TagArticleInLine(admin.TabularInline):
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'author',
         'title',
         'category',

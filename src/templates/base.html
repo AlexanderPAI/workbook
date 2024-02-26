@@ -1,34 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     {% load static %}
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" href="{% static 'img/fav/favicon.ico' %}" type="icon">
-        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/fav/apple-touch-icon.png' %}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/fav/favicon-32x32.png' %}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/fav/favicon-16x16.png' %}">
-    </head>
-    <title>
+    <link rel="icon" href="{% static 'img/fav/favicon.png' %}" type="icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/fav/favicon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/fav/favicon.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/fav/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/prism.css' %}">
+  </head>
+  <title>
     {% block title %}
-      Заголовок вкладки
+      Название вкладки
     {% endblock %}
-    </title>
-    <body>
-        <header>
-            {% include 'includes/header.html' %}
-        </header>
-        <main>
-            <div class="container py-5">
-                {% block content %}
-                {% block header %}
-                {% endblock %}
-                    Содержание страницы
-                {% endblock %}
+  </title>
+  <body>
+    <header>
+      {% include 'includes/header.html' %}
+    </header>
+    <main>
+      <div class='container-md py-5'>
+        <div class="row"> <!-- Ряд -->
+          <div class="col-sm-9"> <!-- Колонка 1 -->
+            {% block content %}
+              Содержание страницы
+            {% endblock %}
+          </div> <!-- Колонка 1 -->
+          <div class="col-sm-3"> <!-- Колонка 2 -->
+            <div class="card bg-secondary mb-3">
+              <div class="card-header text-center">
+                Все теги
+              </div>
+              <div class="card-body">
+                {% for tag in tags %}
+                  <a href="{% url 'articles:articles_by_tag' tag.slug %}"><span class="badge rounded-pill" style="background-color:{{ tag.background_color }}; color:{{ tag.text_color }}">{{ tag }}</span></a>
+                {% endfor %}
+              </div>
             </div>
-        </main>
-        <footer>
-            {% include 'includes/footer.html' %}
-        </footer>
-    </body>
+            <div class="card bg-secondary mb-3">
+              <div class="card-header text-center">
+                Полезные ссылки
+              </div>
+              <div class="card">
+                <button type="button" class="btn btn-secondary">Ссылка1</button>
+                <button type="button" class="btn btn-secondary">Ссылка2</button>
+                <button type="button" class="btn btn-secondary">Ссылка3</button>
+                <button type="button" class="btn btn-secondary">Ссылка4</button>
+                <button type="button" class="btn btn-secondary">Ссылка5</button>
+                <button type="button" class="btn btn-secondary">Ссылка6</button>
+                <button type="button" class="btn btn-secondary">Ссылка7</button>
+                <button type="button" class="btn btn-secondary">Ссылка8</button>
+              </div>
+            </div>
+          </div> <!-- Колонка 2 -->
+        </div> <!-- Ряд -->
+      </div>
+      <br>
+    </main>
+    <footer class="border-top text-center py-3">
+      {% include 'includes/footer.html' %}
+    </footer>
+    <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+    <script src="{% static 'js/prism.js' %}"></script>
+  </body>
 </html>
