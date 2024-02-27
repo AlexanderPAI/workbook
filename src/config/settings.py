@@ -156,4 +156,4 @@ TINYMCE_DEFAULT_CONFIG = {
     "codesample",
 }
 
-CSRF_TRUSTED_ORIGINS=['backendpages.ru']
+CSRF_TRUSTED_ORIGINS = ['https://backendpages.ru']
