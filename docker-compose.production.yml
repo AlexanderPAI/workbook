@@ -50,7 +50,7 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt:rw
       - ./certbot/www:/var/www/certbot:rw
-    command: certonly --webroot --webroot-path=/var/www/certbot/ --email lawlikeart@yandex.ru --agree-tos --no-eff-email -d backendpages.ru -d www.backendpages.ru
+    # command: certonly --webroot --webroot-path=/var/www/certbot/ --email lawlikeart@yandex.ru --agree-tos --no-eff-email -d backendpages.ru -d www.backendpages.ru
     depends_on:
       - nginx
 
