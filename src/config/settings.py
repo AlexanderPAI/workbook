@@ -55,6 +55,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+APPEND_SLASH = False
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -157,3 +159,6 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 CSRF_TRUSTED_ORIGINS = ['https://backendpages.ru']
+
+
+
