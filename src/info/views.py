@@ -13,3 +13,10 @@ def AboutView(request):
         'info/about.html',
         context,
     )
+
+
+def MailReceiver(request):
+    return render(
+        request,
+        'info/receiver.html',
+    )
