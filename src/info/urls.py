@@ -6,5 +6,5 @@ app_name = 'info'
 
 urlpatterns = [
     path('about/', AboutView, name='about'),
-    path('receiver.html', MailReceiver, name='mail_reciver'),
+    path('receiver.html/', MailReceiver, name='mail_receiver'),
 ]

@@ -18,5 +18,5 @@ def AboutView(request):
 def MailReceiver(request):
     return render(
         request,
-        'info/receiver.html',
+        'info/_receiver.html',
     )
